@@ -3,6 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#Files to Ignore
+Practice.ipynb
+Mission_to_Mars.ipynb
+.ipynb_checkpoints
+
+
 # C extensions
 *.so
 
