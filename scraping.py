@@ -17,6 +17,7 @@ def scrape_all():
       "news_paragraph": news_paragraph,
       "featured_image": featured_image(browser),
       "facts": mars_facts(),
+      "hemispheres": mars_hemis(browser),
       "last_modified": dt.datetime.now()
     }
     
@@ -96,6 +97,31 @@ def mars_facts():
     
     # Convert dataframe into HTML format, add bootstrap
     return df.to_html()
+
+def mars_hemis(browser):
+    #Visit URL
+    url = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
+    browser.visit(url)
+
+    hemisphere_image_urls = []
+    tags = browser.find_by_css('a.product-item h3')
+    for i in range(len(tags)):
+        try:
+            image = browser.find_by_css('a.product-item h3')[i]
+            image.click()
+            html = browser.html
+            image_soup = soup(html, 'html.parser')
+            img_url=image_soup.find('a', text='Sample').get('href')
+            img_title = image_soup.find('h2', class_="title").get_text()
+            hemisphere = {}
+            hemisphere = {'image_url':img_url,
+                    'image_title':img_title}
+            hemisphere_image_urls.append(hemisphere)
+        except BaseException:
+            print('Error')
+        browser.back()
+    return hemisphere_image_urls
+
 
 if __name__ == "__main__":
     # If running as script, print scraped data
